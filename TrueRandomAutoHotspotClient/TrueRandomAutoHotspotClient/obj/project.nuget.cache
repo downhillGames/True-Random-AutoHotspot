@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "c9c0eyiAqvZkF+Muu7SAPwX95sEaSIEvJ411p60/gIF6KJ9rrJSt/cbtZ6K8WMpG1xdktNzhYtVaV4CvN86HXw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Tyler\\source\\repos\\TrueRandomAutoHotspot\\True-Random-AutoHotspot\\TrueRandomAutoHotspotClient\\TrueRandomAutoHotspotClient\\TrueRandomAutoHotspotClient.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Tyler\\.nuget\\packages\\simplewifi.netstandard\\2.0.0\\simplewifi.netstandard.2.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
