@@ -115,26 +115,27 @@ namespace TrueRandomAutoHotspot_1
         private void button1_Click(object sender, EventArgs e)
         {
             //label1.Text = TrueRandomPassphase(8);
-            label1.Text = "12345678";
-            XMLWrite();
+            String randPassword = "12345678";
+            label1.Text = randPassword;
+            XMLWrite("helloworld",randPassword);
         }
 
-        private void XMLWrite()
+        private void XMLWrite(String SSID, String Passprase)
         {
-            XmlTextWriter textWriter = new XmlTextWriter("C:\\Users\\Tyler\\myXmFile.xml", null);
+            XmlTextWriter textWriter = new XmlTextWriter("E:\\files\\myXmFile.xml", null);
             // Opens the document  
             textWriter.WriteStartDocument();
             textWriter.WriteStartElement("WLANProfile", "http://www.microsoft.com/networking/WLAN/profile/v1");
             textWriter.WriteStartElement("name");
-            textWriter.WriteString("");
+            textWriter.WriteString(SSID);
             textWriter.WriteEndElement();
             textWriter.WriteStartElement("SSIDConfig");
             textWriter.WriteStartElement("SSID");
             textWriter.WriteStartElement("hex");
-            textWriter.WriteString(ToHex(""));
+            textWriter.WriteString(ToHex(SSID));
             textWriter.WriteEndElement();
             textWriter.WriteStartElement("name");
-            textWriter.WriteString("");
+            textWriter.WriteString(SSID);
             textWriter.WriteEndElement();
             textWriter.WriteEndElement();
             textWriter.WriteEndElement();
@@ -165,7 +166,7 @@ namespace TrueRandomAutoHotspot_1
             textWriter.WriteString("false");
             textWriter.WriteEndElement();
             textWriter.WriteStartElement("keyMaterial");
-            textWriter.WriteString("");
+            textWriter.WriteString(Passprase);
             textWriter.WriteEndElement();
             textWriter.WriteEndElement();
             textWriter.WriteEndElement();
