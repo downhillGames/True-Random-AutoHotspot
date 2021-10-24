@@ -18,3 +18,4 @@ C:\Users\Tyler\source\repos\TrueRandomAutoHotspot\True-Random-AutoHotspot\TrueRa
 C:\Users\Tyler\source\repos\TrueRandomAutoHotspot\True-Random-AutoHotspot\TrueRandomAutoHotspot_1\TrueRandomAutoHotspot_1\bin\Debug\TrueRandomAutoHotspot_1.exe.config
 C:\Users\Tyler\source\repos\TrueRandomAutoHotspot\True-Random-AutoHotspot\TrueRandomAutoHotspot_1\TrueRandomAutoHotspot_1\bin\Debug\TrueRandomAutoHotspot_1.exe
 C:\Users\Tyler\source\repos\TrueRandomAutoHotspot\True-Random-AutoHotspot\TrueRandomAutoHotspot_1\TrueRandomAutoHotspot_1\bin\Debug\TrueRandomAutoHotspot_1.pdb
+C:\Users\Tyler\source\repos\TrueRandomAutoHotspot\True-Random-AutoHotspot\TrueRandomAutoHotspot_1\TrueRandomAutoHotspot_1\obj\Debug\TrueRandomAutoHotspot_1.Form2.resources

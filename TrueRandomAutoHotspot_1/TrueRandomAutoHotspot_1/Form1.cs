@@ -19,10 +19,12 @@ namespace TrueRandomAutoHotspot_1
     public partial class Form1 : Form
     {
         public SerialPort myport;
-
+        private bool arduinoSet = false;
 
         private ProcessStartInfo ps = null;
         private string message = "";
+        private string sharedFolder = Form2.shared;
+        private int given_port = Form2.port;
 
         private void Init() {
             ps = new ProcessStartInfo("cmd.exe");
@@ -71,13 +73,43 @@ namespace TrueRandomAutoHotspot_1
             InitializeComponent();
             label2.Text = "";
             label1.Text =  "";
+            if (Form2.arduinoSet) {
+                arduinoSet = true;
+            }
+            button1.Text = "Generate passphrase";
+            button2.Text = "Start Hotspot";
+            button3.Text = "Stop Hotspot";
+            sharedFolder = Form2.shared;
         }
 
-
-        private string TrueRandomPassphase(int length) { 
+        private string PseudoRandomPassphrase(int length) {
+            var rand = new Random();
+            String passphrase = "";
+            for (int i = 0; i<length; i++) {
+                int random = rand.Next(0, 62);
+                //int rand = 10;
+                String randStr = "";
+                if (random >= 36)
+                {
+                    randStr = ((char)(random + 61)).ToString();
+                }
+                else if (random > 9 && random < 36)
+                {
+                    randStr = ((char)(random + 55)).ToString();
+                }
+                else
+                {
+                    randStr =  random.ToString();
+                }
+                passphrase += randStr;
+            }
+            return passphrase;
+        }
+        private string TrueRandomPassphase(int length, int port) { 
             myport = new SerialPort();
             myport.BaudRate = 9600;
-            myport.PortName = "COM17";
+            string port_string = "COM" + port.ToString();
+            myport.PortName = port_string;
             myport.Open();
             int number = length;
             myport.WriteLine(number.ToString());
@@ -115,14 +147,22 @@ namespace TrueRandomAutoHotspot_1
         private void button1_Click(object sender, EventArgs e)
         {
             //label1.Text = TrueRandomPassphase(8);
-            String randPassword = "12345678";
+            String randPassword = "";
+            if (arduinoSet)
+            {
+                randPassword = TrueRandomPassphase(8, given_port);
+            }
+            else {
+               randPassword = PseudoRandomPassphrase(8);
+            }
             label1.Text = randPassword;
-            XMLWrite("helloworld",randPassword);
+            //
         }
 
-        private void XMLWrite(String SSID, String Passprase)
+        private void XMLWrite(String SSID, String Passprase, String sharedFldr)
         {
-            XmlTextWriter textWriter = new XmlTextWriter("E:\\files\\myXmFile.xml", null);
+            String fileName = sharedFldr + "myXmFile.xml";
+            XmlTextWriter textWriter = new XmlTextWriter(fileName, null);
             // Opens the document  
             textWriter.WriteStartDocument();
             textWriter.WriteStartElement("WLANProfile", "http://www.microsoft.com/networking/WLAN/profile/v1");
@@ -196,7 +236,9 @@ namespace TrueRandomAutoHotspot_1
             create("helloworld", label1.Text);
             Start();
             label2.Text = message;
-
+           //string folder = sharedFolder.Replace("\\", "\\\\");
+            Console.WriteLine(sharedFolder);
+            XMLWrite("helloworld", label1.Text, sharedFolder);
         }
 
         
@@ -204,6 +246,12 @@ namespace TrueRandomAutoHotspot_1
         private void label1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Stop();
+            label2.Text = message;
         }
     }
 }
