@@ -19,9 +19,12 @@ namespace TrueRandomAutoHotspotClient
 	{
         private ProcessStartInfo ps = null;
         private string message = "";
+        public static String shared_folder = "";
         public Form1()
 		{
 			InitializeComponent();
+            button1.Text = "Start Client pairing...";
+            shared_folder = Form2.shared;
 		}
 
 		private void Form1_Load(object sender, EventArgs e)
@@ -33,7 +36,7 @@ namespace TrueRandomAutoHotspotClient
             //Status();
             //List();
             Init();
-            create();
+            create(shared_folder);
 		}
 
 
@@ -52,9 +55,9 @@ namespace TrueRandomAutoHotspotClient
             Execute(ps);
         }
 
-        public void create()
+        public void create(String network_location)
         {
-            ps.Arguments = String.Format("wlan add profile filename={0}", "C:\\Users\\Tyler\\myXmFile.xml");
+            ps.Arguments = String.Format("wlan add profile filename={0}", network_location);
             Execute(ps);
         }
 
