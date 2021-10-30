@@ -26,6 +26,10 @@ namespace TrueRandomAutoHotspot_1
         private string sharedFolder = Form2.shared;
         private int given_port = Form2.port;
 
+        Timer timer1 = new Timer
+        {
+            Interval = 5000
+        };
         private void Init() {
             ps = new ProcessStartInfo("cmd.exe");
             ps.UseShellExecute = false;
@@ -80,6 +84,7 @@ namespace TrueRandomAutoHotspot_1
             button2.Text = "Start Hotspot";
             button3.Text = "Stop Hotspot";
             sharedFolder = Form2.shared;
+
         }
 
         private string PseudoRandomPassphrase(int length) {
@@ -239,9 +244,37 @@ namespace TrueRandomAutoHotspot_1
            //string folder = sharedFolder.Replace("\\", "\\\\");
             Console.WriteLine(sharedFolder);
             XMLWrite("helloworld", label1.Text, sharedFolder);
+
+
+            timer1.Enabled = true;
+            timer1.Tick += new System.EventHandler(OnTimerEvent);
+
+
         }
 
-        
+        private void OnTimerEvent(object sender, EventArgs e)
+        {
+            Stop();
+            String randPassword = "";
+            if (arduinoSet)
+            {
+                randPassword = TrueRandomPassphase(8, given_port);
+            }
+            else
+            {
+                randPassword = PseudoRandomPassphrase(8);
+            }
+            label1.Text = randPassword;
+            Task.Delay(1000);
+            Init();
+            create("helloworld", label1.Text);
+            Start();
+            label2.Text = message;
+            Console.WriteLine(sharedFolder);
+            XMLWrite("helloworld", label1.Text, sharedFolder);
+        }
+
+
 
         private void label1_Click(object sender, EventArgs e)
         {
@@ -251,6 +284,7 @@ namespace TrueRandomAutoHotspot_1
         private void button3_Click(object sender, EventArgs e)
         {
             Stop();
+            timer1.Enabled = false;
             label2.Text = message;
         }
     }
