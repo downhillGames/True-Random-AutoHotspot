@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Diagnostics;
 using System.Security.Principal;
 using System.Xml;
+using System.IO;
 
 namespace TrueRandomAutoHotspotClient
 {
@@ -20,10 +21,17 @@ namespace TrueRandomAutoHotspotClient
         private ProcessStartInfo ps = null;
         private string message = "";
         public static String shared_folder = "";
+
+        Timer timer1 = new Timer
+        {
+            Interval = 5000
+        };
+
         public Form1()
 		{
 			InitializeComponent();
-            button1.Text = "Start Client pairing...";
+            button1.Text = "Start Client pairing";
+            button2.Text = "Stop Client pairing";
             shared_folder = Form2.shared;
 		}
 
@@ -37,7 +45,17 @@ namespace TrueRandomAutoHotspotClient
             //List();
             Init();
             create(shared_folder);
-		}
+            timer1.Enabled = true;
+            timer1.Tick += new System.EventHandler(OnTimerEvent);
+        }
+
+
+        private void OnTimerEvent(object sender, EventArgs e)
+        {
+            Stop();
+            Init();
+            create(shared_folder);
+        }
 
 
         private void Init()
@@ -57,7 +75,7 @@ namespace TrueRandomAutoHotspotClient
 
         public void create(String network_location)
         {
-            ps.Arguments = String.Format("wlan add profile filename={0}", network_location);
+            ps.Arguments = String.Format("wlan add profile filename={0}", network_location + "myXmFile.xml");
             Execute(ps);
         }
 
@@ -87,6 +105,11 @@ namespace TrueRandomAutoHotspotClient
                 message += e.Message;
                 isExecuted = false;
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 
