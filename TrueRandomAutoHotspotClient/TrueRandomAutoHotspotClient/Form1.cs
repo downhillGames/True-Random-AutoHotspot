@@ -21,10 +21,17 @@ namespace TrueRandomAutoHotspotClient
         private ProcessStartInfo ps = null;
         private string message = "";
         public static String shared_folder = "";
+        private static int tmer_interval = Form2.timer_count * 1000;
+        private int time_left = tmer_interval / 1000;
 
         Timer timer1 = new Timer
         {
-            Interval = 5000
+            Interval = tmer_interval
+        };
+
+        Timer timer2 = new Timer
+        {
+            Interval = 1000
         };
 
         public Form1()
@@ -33,7 +40,9 @@ namespace TrueRandomAutoHotspotClient
             button1.Text = "Start Client pairing";
             button2.Text = "Stop Client pairing";
             shared_folder = Form2.shared;
-		}
+            label1.Text = "Timer: ";
+            label2.Text = time_left.ToString();
+        }
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
@@ -47,6 +56,8 @@ namespace TrueRandomAutoHotspotClient
             create(shared_folder);
             timer1.Enabled = true;
             timer1.Tick += new System.EventHandler(OnTimerEvent);
+            timer2.Enabled = true;
+            timer2.Tick += new System.EventHandler(OnSecondEvent);
         }
 
 
@@ -55,6 +66,7 @@ namespace TrueRandomAutoHotspotClient
             Stop();
             Init();
             create(shared_folder);
+            time_left = tmer_interval / 1000;
         }
 
 
@@ -106,10 +118,16 @@ namespace TrueRandomAutoHotspotClient
                 isExecuted = false;
             }
         }
-
+       
+        /*Trigger for timer 1, starts a new Windows hotspot with a random passprase*/
+        private void OnSecondEvent(object sender, EventArgs e)
+        {
+            time_left -= 1;
+            label2.Text = time_left.ToString();
+        }
         private void button2_Click(object sender, EventArgs e)
         {
-
+            Stop();
         }
     }
 

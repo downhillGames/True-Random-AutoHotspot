@@ -298,7 +298,7 @@ namespace TrueRandomAutoHotspot_1
             label5.Text = ssid_name_given + "_" + index.ToString();
             Console.WriteLine(sharedFolder);
             XMLWrite(ssid_name_given  + "_" + index.ToString(), label1.Text, sharedFolder);
-            time_left = tmer_interval / 1000;
+            time_left = (tmer_interval / 1000) - 1;
     }
 
    
@@ -308,6 +308,7 @@ namespace TrueRandomAutoHotspot_1
         {
             Stop();
             timer1.Enabled = false;
+            timer2.Enabled = false;
             label2.Text = message;
         }
 
