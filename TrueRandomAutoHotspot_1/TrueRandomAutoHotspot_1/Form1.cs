@@ -20,16 +20,25 @@ namespace TrueRandomAutoHotspot_1
     {
         public SerialPort myport;
         private bool arduinoSet = false;
-
+        private int index = 0;
         private ProcessStartInfo ps = null;
         private string message = "";
         private string sharedFolder = Form2.shared;
         private int given_port = Form2.port;
+        private static int tmer_interval = Form2.timer_count * 1000;
+        private int time_left = tmer_interval / 1000;
+        private string ssid_name_given = Form2.ssid_name;
 
         Timer timer1 = new Timer
         {
-            Interval = 5000
+            Interval = tmer_interval
         };
+
+        Timer timer2 = new Timer
+        {
+            Interval = 1000
+        };
+
         private void Init() {
             ps = new ProcessStartInfo("cmd.exe");
             ps.UseShellExecute = false;
@@ -50,12 +59,13 @@ namespace TrueRandomAutoHotspot_1
 
         public void Stop()
         {
+            index += 1;
             ps.Arguments = "wlan stop hosted network";
             Execute(ps);
         }
 
 
-
+        /*Executes given process in command prompt*/
         private void Execute(ProcessStartInfo ps) {
             bool isExecuted = false;
             try {
@@ -71,12 +81,18 @@ namespace TrueRandomAutoHotspot_1
                 isExecuted = false;
             }
         }
-
+        
+        /*Initializes the main screen*/
         public Form1()
         {
             InitializeComponent();
             label2.Text = "";
+            label3.Text = "Passprase";
             label1.Text =  "";
+            label5.Text = "";
+            label4.Text = "SSID:";
+            label6.Text = "Timer:";
+            label7.Text = time_left.ToString();
             if (Form2.arduinoSet) {
                 arduinoSet = true;
             }
@@ -84,7 +100,6 @@ namespace TrueRandomAutoHotspot_1
             button2.Text = "Start Hotspot";
             button3.Text = "Stop Hotspot";
             sharedFolder = Form2.shared;
-
         }
 
         private string PseudoRandomPassphrase(int length) {
@@ -134,12 +149,7 @@ namespace TrueRandomAutoHotspot_1
                 Console.WriteLine(array1[i]);
             }
 
-            //foreach (var item in array1)
-            //{
-
-            //  str += item;
-            // Console.WriteLine(item);
-            //}
+    
             str = Regex.Replace(str, @"[^0-9a-zA-Z]+", "");
 
             Console.WriteLine(str);
@@ -161,9 +171,9 @@ namespace TrueRandomAutoHotspot_1
                randPassword = PseudoRandomPassphrase(8);
             }
             label1.Text = randPassword;
-            //
         }
 
+        /*This ugly function outputs the hotspot info into an XML that command prompt can read*/
         private void XMLWrite(String SSID, String Passprase, String sharedFldr)
         {
             String fileName = sharedFldr + "myXmFile.xml";
@@ -222,7 +232,6 @@ namespace TrueRandomAutoHotspot_1
             textWriter.WriteEndElement();
             textWriter.WriteEndElement();
             textWriter.WriteEndElement();
-            //textWriter.WriteEndElement();
             textWriter.Close();
         }
 
@@ -238,20 +247,36 @@ namespace TrueRandomAutoHotspot_1
         private void button2_Click(object sender, EventArgs e)
         {
             Init();
-            create("helloworld", label1.Text);
+            create(ssid_name_given + "_" + index.ToString(), label1.Text);
             Start();
             label2.Text = message;
-           //string folder = sharedFolder.Replace("\\", "\\\\");
             Console.WriteLine(sharedFolder);
-            XMLWrite("helloworld", label1.Text, sharedFolder);
+            label5.Text = ssid_name_given + "_" + index.ToString();
+            XMLWrite(ssid_name_given + "_" + index.ToString(), label1.Text, sharedFolder);
 
-
+            //enable timer to switch SSID / passprase
             timer1.Enabled = true;
             timer1.Tick += new System.EventHandler(OnTimerEvent);
-
+            
+            //enable "second" timer
+            timer2.Enabled = true;
+            timer2.Tick += new System.EventHandler(OnSecondEvent);
 
         }
 
+
+
+        /*Trigger for timer 1, starts a new Windows hotspot with a random passprase*/
+        private void OnSecondEvent(object sender, EventArgs e)
+        {
+            time_left -= 1;
+            label7.Text = time_left.ToString();
+        }
+
+
+
+
+        /*Trigger for timer 1, starts a new Windows hotspot with a random passprase*/
         private void OnTimerEvent(object sender, EventArgs e)
         {
             Stop();
@@ -267,25 +292,24 @@ namespace TrueRandomAutoHotspot_1
             label1.Text = randPassword;
             Task.Delay(1000);
             Init();
-            create("helloworld", label1.Text);
+            create(ssid_name_given + "_" + index.ToString(), label1.Text);
             Start();
             label2.Text = message;
+            label5.Text = ssid_name_given + "_" + index.ToString();
             Console.WriteLine(sharedFolder);
-            XMLWrite("helloworld", label1.Text, sharedFolder);
-        }
+            XMLWrite(ssid_name_given  + "_" + index.ToString(), label1.Text, sharedFolder);
+            time_left = tmer_interval / 1000;
+    }
 
+   
 
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
+ 
         private void button3_Click(object sender, EventArgs e)
         {
             Stop();
             timer1.Enabled = false;
             label2.Text = message;
         }
+
     }
 }
