@@ -106,7 +106,8 @@ namespace TrueRandomAutoHotspot_1
             var rand = new Random();
             String passphrase = "";
             for (int i = 0; i<length; i++) {
-                int random = rand.Next(0, 62);
+                //int random = rand.Next(0, 62);
+                int random = rand.Next(0, 9);
                 //int rand = 10;
                 String randStr = "";
                 if (random >= 36)
@@ -247,6 +248,7 @@ namespace TrueRandomAutoHotspot_1
         private void button2_Click(object sender, EventArgs e)
         {
             Init();
+            //bel1.Text = "NVYILDGB";
             create(ssid_name_given + "_" + index.ToString(), label1.Text);
             Start();
             label2.Text = message;
@@ -289,6 +291,7 @@ namespace TrueRandomAutoHotspot_1
             {
                 randPassword = PseudoRandomPassphrase(8);
             }
+           // label1.Text = "NVYILDGB";
             label1.Text = randPassword;
             Task.Delay(1000);
             Init();
